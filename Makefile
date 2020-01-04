@@ -22,14 +22,14 @@ include $(FXCGSDK)/common/prizm_rules
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
 SOURCES		:=	src
-DATA		:=	data  
+DATA		:=	data
 INCLUDES	:=
 
 #---------------------------------------------------------------------------------
 # options for code and add-in generation
 #---------------------------------------------------------------------------------
 
-MKG3AFLAGS := -n basic:space-inv -i uns:../unselected.bmp -i sel:../selected.bmp
+MKG3AFLAGS := -n basic:space_invaders -i uns:../unselected.bmp -i sel:../selected.bmp
 
 CFLAGS	= -Os -Wall $(MACHDEP) $(INCLUDE)
 CXXFLAGS	=	$(CFLAGS)

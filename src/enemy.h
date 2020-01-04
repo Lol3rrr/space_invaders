@@ -3,8 +3,11 @@
 
 #include <stdlib.h>
 
+#include "general.h"
+
+#include "engine/collision.h"
+#include "engine/render.h"
 #include "movement.h"
-#include "render.h"
 
 #define ENEMY_SPEED 1
 #define ENEMY_HEIGHT 16
@@ -19,11 +22,11 @@ typedef struct enemy {
 } enemy;
 
 enemy* spawnEnemy(int x, int y, int deltaX, int type) {
-    enemy* tmp = (enemy*) malloc(1 * sizeof(enemy));
+  enemy* tmp = (enemy*) malloc(1 * sizeof(enemy));
 	tmp->x = x;
 	tmp->y = y;
 	tmp->deltaX = deltaX;
-    tmp->type = type;
+  tmp->type = type;
 
 	if (type == 1) {
 		tmp->width = 16;
@@ -41,11 +44,11 @@ void cleanUpEnemy(enemy* pEnemy) {
 }
 
 int moveEnemy(enemy* pEnemy) {
-    if (pEnemy == 0) {
+  if (pEnemy == 0) {
 		return 0;
 	}
 
-    pEnemy->x = move(pEnemy->x, pEnemy->deltaX, MAX_X - pEnemy->width, MIN_X);
+  pEnemy->x = move(pEnemy->x, pEnemy->deltaX, MAX_X - pEnemy->width, MIN_X);
 	if (pEnemy->x + pEnemy->width >= MAX_X || pEnemy->x == MIN_X) {
 		return -1;
 	}
@@ -53,14 +56,14 @@ int moveEnemy(enemy* pEnemy) {
 	return 0;
 }
 void moveEnemyDown(enemy* pEnemy, int amount) {
-    if (pEnemy == 0) {
+  if (pEnemy == 0) {
 		return;
 	}
 
-    pEnemy->y += amount;
+  pEnemy->y += amount;
 }
 void flipMovement(enemy* pEnemy) {
-    pEnemy->deltaX *= -1;
+  pEnemy->deltaX *= -1;
 }
 
 void renderEnemy(enemy* pEnemy) {
@@ -84,7 +87,7 @@ void renderEnemy(enemy* pEnemy) {
 			{-1,  0, -1, -1, -1, -1,  0, -1}
 		};
 
-		drawSprite(x, y, 8, 8, sprite, 2);
+		renderSprite(x, y, 8, 8, sprite, 2);
 	} else if (type == 2) {
 		int sprite[8][11] = {
 			{-1, -1,  0, -1, -1, -1, -1, -1,  0, -1, -1},
@@ -97,7 +100,7 @@ void renderEnemy(enemy* pEnemy) {
 			{-1, -1, -1,  0,  0, -1,  0,  0, -1, -1, -1}
 		};
 
-		drawSprite(x, y, 8, 11, sprite, 2);
+		renderSprite(x, y, 8, 11, sprite, 2);
 	} else if (type == 3) {
 		int sprite[8][12] = {
 			{-1, -1, -1, -1,  0,  0,  0,  0, -1, -1, -1, -1},
@@ -110,33 +113,26 @@ void renderEnemy(enemy* pEnemy) {
 			{-1, -1,  0,  0, -1, -1, -1, -1,  0,  0, -1, -1}
 		};
 
-		drawSprite(x, y, 8, 12, sprite, 2);
+		renderSprite(x, y, 8, 12, sprite, 2);
 	}
 }
 
 
-int checkShotXCollision(enemy* pEnemy, shot* pShot) {
-	if (pShot->x + SHOT_WIDTH < pEnemy->x) {
-		return 0;
-	}
-	if (pShot->x > (pEnemy->x + pEnemy->width)) {
-		return 0;
-	}
-
-	return 1;
-}
-int checkShotYCollision(enemy* pEnemy, shot* pShot) {
-	if (pShot->y + SHOT_HEIGHT < pEnemy->y) {
-		return 0;
-	}
-	if (pShot->y > pEnemy->y + ENEMY_HEIGHT) {
-		return 0;
-	}
-
-	return 1;
-}
 int enemyCheckShotCollision(enemy* pEnemy, shot* pShot) {
-	return (checkShotXCollision(pEnemy, pShot) && checkShotYCollision(pEnemy, pShot));
+  RECT enemyRect = {
+    .x = pEnemy->x,
+    .y = pEnemy->y,
+    .width = pEnemy->width,
+    .height = ENEMY_HEIGHT,
+  };
+  RECT shotRect = {
+    .x = pShot->x,
+    .y = pShot->y,
+    .width = SHOT_WIDTH,
+    .height = SHOT_HEIGHT,
+  };
+
+	return checkCollision(&enemyRect, &shotRect);
 }
 
 #endif

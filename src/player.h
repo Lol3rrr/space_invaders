@@ -3,8 +3,9 @@
 
 #include <stdlib.h>
 
+#include "engine/collision.h"
+#include "engine/render.h"
 #include "movement.h"
-#include "render.h"
 
 #include "shot.h"
 
@@ -39,7 +40,7 @@ void drawPlayerModel(int x, int y) {
 		{ 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0}
 	};
 
-	drawSprite(x, y, 6, 11, sprite, 2);
+	renderSprite(x, y, 6, 11, sprite, 2);
 }
 
 void renderPlayer(player* pPlayer) {
@@ -51,28 +52,21 @@ void renderPlayer(player* pPlayer) {
 }
 
 
-int playerCheckShotXCollision(player* pPlayer, shot* pShot) {
-	if (pShot->x + SHOT_WIDTH < pPlayer->x) {
-		return 0;
-	}
-	if (pShot->x > (pPlayer->x + PLAYER_WIDTH)) {
-		return 0;
-	}
-
-	return 1;
-}
-int playerCheckShotYCollision(player* pPlayer, shot* pShot) {
-	if (pShot->y + SHOT_HEIGHT < pPlayer->y) {
-		return 0;
-	}
-	if (pShot->y > pPlayer->y + PLAYER_HEIGHT) {
-		return 0;
-	}
-
-	return 1;
-}
 int playerCheckShotCollision(player* pPlayer, shot* pShot) {
-	return (playerCheckShotXCollision(pPlayer, pShot) && playerCheckShotYCollision(pPlayer, pShot));
+  RECT playerRect = {
+    .x = pPlayer->x,
+    .y = pPlayer->y,
+    .width = PLAYER_WIDTH,
+    .height = PLAYER_HEIGHT,
+  };
+  RECT shotRect = {
+    .x = pShot->x,
+    .y = pShot->y,
+    .width = SHOT_WIDTH,
+    .height = SHOT_HEIGHT,
+  };
+
+	return checkCollision(&playerRect, &shotRect);
 }
 
 #endif

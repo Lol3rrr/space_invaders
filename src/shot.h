@@ -3,8 +3,10 @@
 
 #include <stdlib.h>
 
+#include "general.h"
+
+#include "engine/render.h"
 #include "movement.h"
-#include "render.h"
 
 #define SHOT_SPEED 2
 #define SHOT_WIDTH 2
@@ -54,8 +56,17 @@ void renderShot(shot* pShot) {
 	if (pShot == 0) {
 		return;
 	}
-	
-	drawRect(pShot->x, pShot->y, SHOT_WIDTH, SHOT_HEIGHT, 0);
+
+	int sprite[SHOT_HEIGHT][SHOT_WIDTH] = {
+		{ 0,  0},
+		{ 0,  0},
+		{ 0,  0},
+		{ 0,  0},
+		{ 0,  0},
+		{ 0,  0}
+	};
+
+	renderSprite(pShot->x, pShot->y, SHOT_HEIGHT, SHOT_WIDTH, sprite, 2);
 }
 
 #endif

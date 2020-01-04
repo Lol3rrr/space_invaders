@@ -10,14 +10,12 @@
 #include <rtc.h>
 
 #include "movement.h"
-#include "render.h"
 
 #include "player.h"
 #include "shot.h"
 #include "shotList.h"
 #include "enemy.h"
 #include "enemyList.h"
-#include "input.h"
 #include "ui.h"
 
 #include "game.h"
@@ -27,7 +25,7 @@
 #define MAIN_MENU -1
 
 
-int main(void) {
+int main() {
 	Bdisp_AllClr_VRAM();
 
 	gameInfo* info = initGame(MIN_X, MAX_X);

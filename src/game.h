@@ -1,9 +1,15 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "general.h"
+
+#include "ui.h"
 #include "player.h"
 #include "shotList.h"
 #include "enemyList.h"
+
+#include "engine/input.h"
+#include "engine/utils.h"
 
 typedef struct gameInfo {
     int lives;
@@ -15,10 +21,10 @@ typedef struct gameInfo {
 } gameInfo;
 
 gameInfo* initGame(int minX, int maxX) {
-    gameInfo* result = (gameInfo*) malloc(1 * sizeof(gameInfo));
-    result->lives = 3;
-    result->score = 0;
-    result->cyclesBeforeShot = 0;
+  gameInfo* result = (gameInfo*) malloc(1 * sizeof(gameInfo));
+  result->lives = 3;
+  result->score = 0;
+  result->cyclesBeforeShot = 0;
 
     // Spawn at bottom of Screen
 	int center = ((maxX - minX) / 2) - (PLAYER_WIDTH / 2) - 1;
@@ -59,35 +65,27 @@ void cleanUpGame(gameInfo* info) {
 
 
 void handlePlayerInput(int key, player* pPlayer, shotList_t** shotsHead, int* cycleBeforeNextShot, int min_X, int max_X) {
-    if (key == 73 || key == 38) {
+  if (key == KEY_4 || key == KEY_LEFT) {
 		pPlayer->x = move(pPlayer->x, -PLAYER_SPEED, max_X - PLAYER_WIDTH, min_X); // Move left
-	} else if (key == 53 || key == 27) {
+	} else if (key == KEY_6 || key == KEY_RIGHT) {
 		pPlayer->x = move(pPlayer->x, PLAYER_SPEED, max_X - PLAYER_WIDTH, min_X);  // Move right
-	} else if ((key == 63 || key == 28) && *cycleBeforeNextShot <= 0) {
+	} else if ((key == KEY_5 || key == KEY_UP) && *cycleBeforeNextShot <= 0) {
 		int center = pPlayer->x + (PLAYER_WIDTH / 2) - 1;
-        playerShoot(shotsHead, center, pPlayer->y);  // Shoot up
-		*cycleBeforeNextShot = 20;
+    playerShoot(shotsHead, center, pPlayer->y);  // Shoot up
+		*cycleBeforeNextShot = 10;
 	}
 }
 
-void sleepTicks(int ticks) {
-	int RTC = RTC_GetTicks();
-	int dRTC = 0;
-	do {
-		dRTC = RTC_GetTicks() - RTC;
-	}while(dRTC < ticks);
-}
-
 int runGameCycle(gameInfo* info) {
-    int key = getInput();
+  int key = getInput_NonBlocking();
 
 	if (key == KEY_PRGM_MENU) {
 		while (1) {
 			renderInGameUI();
 			Bdisp_PutDisp_DD();
-			
 
-			int tmpKey = getInput();
+
+			int tmpKey = getInput_NonBlocking();
 
 			// The EXE key
 			if (tmpKey == 31) {
@@ -129,8 +127,8 @@ int runGameCycle(gameInfo* info) {
 	renderPlayer(info->user);
 	renderShots(&(info->shots));
 
-	drawRect(MIN_X, 0, 1, MAX_Y, 0);
-	drawRect(MAX_X, 0, 1, MAX_Y, 0);
+	renderRect(MIN_X, 0, 1, MAX_Y, C_BLACK);
+	renderRect(MAX_X, 0, 1, MAX_Y, C_BLACK);
 	renderGameUI(info->score, info->lives);
 
 	Bdisp_PutDisp_DD();

@@ -31,7 +31,7 @@ INCLUDES	:=
 
 MKG3AFLAGS := -n basic:space_invaders -i uns:../unselected.bmp -i sel:../selected.bmp
 
-CFLAGS	= -Os -Wall $(MACHDEP) $(INCLUDE)
+CFLAGS	= -std=c99 -Os -Wall $(MACHDEP) $(INCLUDE)
 CXXFLAGS	=	$(CFLAGS)
 
 LDFLAGS	= $(MACHDEP) -T$(FXCGSDK)/common/prizm.ld -Wl,-static -Wl,-gc-sections

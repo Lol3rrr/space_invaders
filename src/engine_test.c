@@ -4,10 +4,10 @@
 #include <keyboard_syscalls.h>
 #include <keyboard.h>
 #include <keyboard.hpp>
-#include <CONVERT_syscalls.h> 
+#include <CONVERT_syscalls.h>
 #include <SYSTEM_syscalls.h>
-#include <STD_syscalls.h> 
-#include <rtc.h> 
+#include <STD_syscalls.h>
+#include <rtc.h>
 
 #include "movement.h"
 #include "render.h"
@@ -41,6 +41,7 @@ int main(void) {
 		if (status == RUNNING) {
 			int result = runGameCycle(info);
 			if (result == -2) {
+				status = MAIN_MENU;
 				return 0;
 			}
 			if (result == -1) {
@@ -70,6 +71,6 @@ int main(void) {
 			status = RUNNING;
 		}
 	}
- 
+
 	return 0;
 }

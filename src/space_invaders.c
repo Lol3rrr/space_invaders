@@ -1,23 +1,9 @@
 #include <display_syscalls.h>
-#include <disp_tools.hpp>
-#include <color.h>
-#include <keyboard_syscalls.h>
 #include <keyboard.h>
 #include <keyboard.hpp>
 #include <CONVERT_syscalls.h>
-#include <SYSTEM_syscalls.h>
-#include <STD_syscalls.h>
-#include <rtc.h>
 
-#include "movement.h"
-
-#include "player.h"
-#include "shot.h"
-#include "shotList.h"
-#include "enemy.h"
-#include "enemyList.h"
 #include "ui.h"
-
 #include "game.h"
 
 #define RUNNING 1
